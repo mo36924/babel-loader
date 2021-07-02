@@ -1,0 +1,54 @@
+{
+  "name": "@mo36924/babel-loader",
+  "version": "1.0.0",
+  "description": "babel-loader",
+  "keywords": [],
+  "homepage": "https://github.com/mo36924/babel-loader#readme",
+  "bugs": {
+    "url": "https://github.com/mo36924/babel-loader/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mo36924/babel-loader.git"
+  },
+  "license": "MIT",
+  "author": "mo36924",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "babel-node": "./dist/bin.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "run-s clean format build:*",
+    "build:tsc": "tsc",
+    "clean": "del dist",
+    "format": "run-s format:*",
+    "format:sort-package-json": "sort-package-json",
+    "format:prettier": "prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "all"
+  },
+  "dependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-syntax-top-level-await": "^7.14.5",
+    "@rollup/pluginutils": "^4.1.0",
+    "enhanced-resolve": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.1.14",
+    "del-cli": "^4.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.2",
+    "sort-package-json": "^1.50.0",
+    "typescript": "^4.3.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
