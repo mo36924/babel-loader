@@ -3,7 +3,8 @@ import { transformAsync } from "@babel/core";
 import tla from "@babel/plugin-syntax-top-level-await";
 import { dataToEsm } from "@rollup/pluginutils";
 import enhancedResolve, { ResolveOptions } from "enhanced-resolve";
-import { dirname } from "path";
+import { existsSync } from "fs";
+import { dirname, join, resolve as pathResolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { promisify } from "util";
 
@@ -31,6 +32,8 @@ type TransformSource = (
   defaultTransformSource: TransformSource,
 ) => { source: string | SharedArrayBuffer | Uint8Array } | Promise<{ source: string | SharedArrayBuffer | Uint8Array }>;
 
+const base = pathResolve(existsSync("src") ? "src" : "");
+
 const resolver: (dir: string, request: string) => Promise<string | false> = promisify(
   enhancedResolve.create({
     conditionNames: ["import", "require", "default"],
@@ -41,6 +44,15 @@ const resolver: (dir: string, request: string) => Promise<string | false> = prom
 export const resolve: Resolve = async (specifier, context, defaultResolve) => {
   if (specifier[0] === ".") {
     const result = await resolver(dirname(fileURLToPath(context.parentURL!)), specifier);
+    if (result) {
+      return {
+        url: pathToFileURL(result).href,
+      };
+    }
+  }
+
+  if (specifier.startsWith("~/") || specifier.startsWith("@/")) {
+    const result = await resolver(dirname(fileURLToPath(context.parentURL!)), join(base, specifier.slice(2)));
     if (result) {
       return {
         url: pathToFileURL(result).href,
